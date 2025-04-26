@@ -2,17 +2,21 @@ public class Pessoa {
 	private String CPF;
 	
 	public void setCPF(String cpf) {
-		int[] cpfConvertidoPessoa=Pessoa.converte(cpf);
-		System.out.println(Pessoa.verifica(cpfConvertidoPessoa));
-		this.CPF=cpf;
+		if(Pessoa.verifica(cpf)==true) {
+			System.out.println("CPF valido!");
+			this.CPF=cpf;
+		}else {
+			System.out.println("CPF invalido");
+		}
+		
 	}
 	public String getCPF() {
 		return this.CPF;
 	}
-	public static int[] converte(String original) {
+	public static boolean verifica(String original) {
 		if(original.length()!=11) {
 			System.out.println("Tamanho Invalido");
-			return null;
+			return false;
 		}
 		int[] cpf = new int[11];
 		for (int i = 0; i < cpf.length; i++) {
@@ -21,20 +25,21 @@ public class Pessoa {
 				cpf[i] = c - '0';
 			}else {
 				System.out.println("Caracter invalido detectado!");
-				cpf=null;
-				break;
+				return false;
 			}
 		}
-		return cpf;
-	}
-	public static boolean verifica(int cpf[]) {//FALTA FAZER A VERIFICAÇÃO DO SEGUNDO DIGITO
-		//https://dicasdeprogramacao.com.br/algoritmo-para-validar-cpf/
 		int acumulado = 0;
 		for (int i = 0; i < 9; i++) {
 			acumulado+=cpf[i]*(10-i);
 		}
-		int resto = (acumulado*10)%11;
-		return (resto == cpf[9]) ? true : false;
-
+		int resto1 = (acumulado*10)%11;
+		acumulado=0;
+		for (int i = 0; i < 10; i++) {
+			acumulado+=cpf[i]*(11-i);
+		}
+		int resto2 = (acumulado*10)%11;
+		resto1 = (resto1 == 10) ? 0 : resto1;
+		resto2 = (resto2 == 10) ? 0 : resto2;
+		return (resto1==cpf[9]&&resto2==cpf[10]);
 	}
 }
